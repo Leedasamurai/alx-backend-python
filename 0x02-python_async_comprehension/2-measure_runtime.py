@@ -1,20 +1,25 @@
 #!/usr/bin/env python3
 
 """
-1-async_comprehension.py
+2-measure_runtime.py
 
-This module contains an asynchronous coroutine that uses async comprehension to collect random numbers.
+This module contains a coroutine to measure the runtime of executing
+async_comprehension four times in parallel.
 """
 
 import asyncio
-from async_generator import async_generator
-from typing import List
+import time
+async_comprehension = __import__('1-async_comprehension').async_comprehension
 
-async def async_comprehension() -> List[float]:
+async def measure_runtime() -> float:
     """
-    Collects 10 random numbers using an async comprehensing over async_generator.
+    Measures the total runtime of executing async_comprehension four times in parallel.
 
     Returns:
-        List[float]: A list of 10 random floats between 0 and 10.
+        float: The total runtime in seconds.
     """
-    return [i async for i in async_generator()]
+    start_time = time.perf_counter()
+    await asyncio.gather(async_comprehension(), async_comprehension(),
+            async_comprehension(), async_comprehension())
+    return time.perf_counter() - start_time
+
